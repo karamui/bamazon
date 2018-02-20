@@ -28,7 +28,6 @@ connection.connect();
  
 loadQuery();
 
-
 // ------------------------------------ FUNCTIONS
 
 // function to buy a product

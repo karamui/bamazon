@@ -1,5 +1,5 @@
 -- create bamazon database
-DROP DATABASE IF EXISTS bamazon; -- drop database if it exists (ONLY FOR USE IN HW)
+-- DROP DATABASE IF EXISTS bamazon; -- drop database if it exists (ONLY FOR USE IN HW)
 CREATE DATABASE bamazon;
 
 -- select bamazon database
