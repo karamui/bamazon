@@ -12,7 +12,7 @@ var total = 0;
 var purchases = [];
 var amounts = [];
 
-// declares variable to hold query for updating database
+// declares variable to hold query string for updating database
 var update;
 
 // creates mysql server connection
