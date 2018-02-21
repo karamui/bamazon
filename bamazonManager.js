@@ -7,7 +7,7 @@ var mysql = require("mysql");
 // declares global variable to hold query results
 var resultArray;
 
-// declares variable to hold query string for updating database
+// declares global variable to hold query string for updating database
 var update;
 
 // creates mysql server connection
@@ -28,12 +28,14 @@ loadQuery();
 // function to add items to inventory
 function addInventory() {
 	// shows current inventory
-	console.log("\nBAMAZON CURRENTLY OFFERS THE FOLLOWING ITEMS...")
-	console.log("Item ID | Product Name | Department | Price | Stock Quantity \n");
+	console.log("\n\x1b[36mBAMAZON CURRENTLY OFFERS THE FOLLOWING ITEMS...")
+	console.log("Item ID | Product Name | Department | Price | Stock Quantity \n\x1b[37m");
 
 	for (var i = 0; i < resultArray.length; i++) {
 		console.log(resultArray[i].item_id + " | " + resultArray[i].product_name + " | " + resultArray[i].department_name + " | $" + resultArray[i].price + " | " + resultArray[i].stock_quantity);
 	}
+
+	console.log("\n------------------------------------ \n");
 
 	// adds to inventory based on user input
 	inquirer.prompt([
@@ -50,20 +52,27 @@ function addInventory() {
 		var id = parseInt(answer.id);
 		var quantity = parseInt(answer.quantity);
 
-		// query to update the database
-		update = "UPDATE products SET stock_quantity = " + (resultArray[id - 1].stock_quantity + quantity) + " WHERE item_id = " + id;
+		// checks if user input is valid
+		if (isNaN(answer.id) == true || id <= 0 || id > resultArray.length) {
+			console.log("\x1b[31mERROR: That item does not exist! Please select a valid item. \n\x1b[37m");
+		} else if (isNaN(answer.quantity) == true || quantity <= 0) {
+			console.log("\x1b[31mERROR: You must add more than one unit. \n\x1b[37m");
+		} else {
+			// query to update the database
+			update = "UPDATE products SET stock_quantity = " + (resultArray[id - 1].stock_quantity + quantity) + " WHERE item_id = " + id;
 
-		// updates the database
-		connection.query(update, function (error, results, fields) {
-			if (error) {
-				console.log(error);
-			};
-		});
+			// updates the database
+			connection.query(update, function (error, results, fields) {
+				if (error) {
+					console.log(error);
+				};
+			});
 
-		// notifies the user that the desired inventory has been added and displays updated product information
-		console.log("\nINVENTORY ADDED!");
-		console.log("Quantity Added | Item ID | Product Name | Department | Price | Stock Quantity");
-		console.log(quantity + " | " + resultArray[id - 1].item_id + " | " + resultArray[id - 1].product_name + " | " + resultArray[id - 1].department_name + " | $" + resultArray[id - 1].price + " | " + (resultArray[id - 1].stock_quantity + quantity));
+			// notifies the user that the desired inventory has been added and displays updated product information
+			console.log("\n\x1b[36mINVENTORY ADDED!");
+			console.log("Quantity Added | Item ID | Product Name | Department | Price | Stock Quantity\x1b[37m");
+			console.log(quantity + " | " + resultArray[id - 1].item_id + " | " + resultArray[id - 1].product_name + " | " + resultArray[id - 1].department_name + " | $" + resultArray[id - 1].price + " | " + (resultArray[id - 1].stock_quantity + quantity));
+		}
 
 		console.log("\n");
 		keepGoing();
@@ -83,33 +92,40 @@ function addProduct() {
 		name: "department_name"
 	},
 	{
-		message: "How much does this product cost per unit?",
+		message: "How much does this product cost per unit? (enter a number)",
 		name: "price"
 	},
 	{
-		message: "How many units of this product do you have?",
+		message: "How many units of this product do you have? (enter a number)",
 		name: "stock_quantity"
 	}
 	]).then(function(answer) {
-		// converts user input to integers
-		var price = parseFloat(answer.price)
-		price = price.toFixed(2);
-		var stock_quantity = parseInt(answer.stock_quantity);
+		// checks if user input is valid
+		if (isNaN(answer.price) == true) {
+			console.log("\x1b[31mERROR: Please enter a valid price. \n\x1b[37m");
+		} else if (isNaN(answer.stock_quantity) == true) {
+			console.log("\x1b[31mERROR: Please enter a valid stock quantity. \n\x1b[37m");
+		} else {
+			// converts user input to integers
+			var price = parseFloat(answer.price)
+			price = price.toFixed(2);
+			var stock_quantity = parseInt(answer.stock_quantity);
 
-		// query to update the database
-		update = "INSERT INTO products (product_name, department_name, price, stock_quantity) VALUES ('" + answer.product_name + "', '" + answer.department_name + "', " + price + ", " + stock_quantity + ")";
+			// query to update the database
+			update = "INSERT INTO products (product_name, department_name, price, stock_quantity, product_sales) VALUES ('" + answer.product_name + "', '" + answer.department_name + "', " + price + ", " + stock_quantity + ", 0)";
 
-		// updates the database
-		connection.query(update, function (error, results, fields) {
-			if (error) {
-				console.log(error);
-			};
-		});
+			// updates the database
+			connection.query(update, function (error, results, fields) {
+				if (error) {
+					console.log(error);
+				};
+			});
 
-		// notifies the user that the new product has been added and displays new product information
-		console.log("\nNEW PRODUCT ADDED!");
-		console.log("Product Name | Department | Price | Stock Quantity");
-		console.log(answer.product_name + " | " + answer.department_name + " | $" + price + " | " + stock_quantity);
+			// notifies the user that the new product has been added and displays new product information
+			console.log("\n\x1b[36mNEW PRODUCT ADDED!");
+			console.log("Product Name | Department | Price | Stock Quantity\x1b[37m");
+			console.log(answer.product_name + " | " + answer.department_name + " | $" + price + " | " + stock_quantity);
+		}
 
 		console.log("\n");
 		keepGoing();
@@ -131,7 +147,7 @@ function keepGoing() {
 			console.log("\n");
 			loadQuery();
 		} else {
-			console.log("Goodbye.");
+			console.log("\x1b[36mGoodbye.\x1b[37m");
 			
 			// closes mysql server connection 
 			connection.end();
@@ -159,28 +175,27 @@ function loadQuery() {
 			name: "dothis"
 		}
 		]).then(function(answer) {
-
 			if (answer.dothis == "View products for sale.") {
 				// shows current inventory
-				console.log("\nBAMAZON CURRENTLY OFFERS THE FOLLOWING ITEMS...")
-				console.log("Item ID | Product Name | Department | Price | Stock Quantity \n");
+				console.log("\n\x1b[36mBAMAZON CURRENTLY OFFERS THE FOLLOWING ITEMS...")
+				console.log("Item ID | Product Name | Department | Price | Stock Quantity \n\x1b[37m");
 
 				for (var i = 0; i < results.length; i++) {
 					console.log(results[i].item_id + " | " + results[i].product_name + " | " + results[i].department_name + " | $" + results[i].price + " | " + results[i].stock_quantity);
 				}
-				console.log("\n");
+				console.log("\n------------------------------------ \n");
 				keepGoing();
 			} else if (answer.dothis == "View low inventory.") {
 				// shows items which have fewer than 10 units remaining
-				console.log("\nBAMAZON IS RUNNING LOW ON THE FOLLOWING ITEMS...")
-				console.log("Item ID | Product Name | Department | Price | Stock Quantity \n");
+				console.log("\n\x1b[36mBAMAZON IS RUNNING LOW ON THE FOLLOWING ITEMS...")
+				console.log("Item ID | Product Name | Department | Price | Stock Quantity \n\x1b[37m");
 
 				for (var i = 0; i < results.length; i++) {
 					if (results[i].stock_quantity <= 10) {
 						console.log(results[i].item_id + " | " + results[i].product_name + " | " + results[i].department_name + " | $" + results[i].price + " | " + results[i].stock_quantity);
 					}
 				}
-				console.log("\n");
+				console.log("\n------------------------------------ \n");
 				keepGoing();
 			} else if (answer.dothis == "Add to inventory.") {
 				// allows user to add items to the inventory
@@ -189,9 +204,8 @@ function loadQuery() {
 				// allows user to add a new product to the database
 				addProduct();
 			} else {
-				console.log("ERROR!");
+				console.log("\x1b[31mERROR!\x1b[37m");
 			}
-
 		});
 	});
 }
