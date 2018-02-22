@@ -100,17 +100,17 @@ function addProduct() {
 		name: "stock_quantity"
 	}
 	]).then(function(answer) {
+		// converts user input to integers
+		var price = parseFloat(answer.price)
+		price = price.toFixed(2);
+		var stock_quantity = parseInt(answer.stock_quantity);
+
 		// checks if user input is valid
-		if (isNaN(answer.price) == true) {
+		if (isNaN(answer.price) == true || price <= 0) {
 			console.log("\x1b[31mERROR: Please enter a valid price. \n\x1b[37m");
-		} else if (isNaN(answer.stock_quantity) == true) {
+		} else if (isNaN(answer.stock_quantity) || stock_quantity <= 0) {
 			console.log("\x1b[31mERROR: Please enter a valid stock quantity. \n\x1b[37m");
 		} else {
-			// converts user input to integers
-			var price = parseFloat(answer.price)
-			price = price.toFixed(2);
-			var stock_quantity = parseInt(answer.stock_quantity);
-
 			// query to update the database
 			update = "INSERT INTO products (product_name, department_name, price, stock_quantity, product_sales) VALUES ('" + answer.product_name + "', '" + answer.department_name + "', " + price + ", " + stock_quantity + ", 0)";
 

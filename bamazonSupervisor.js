@@ -46,14 +46,14 @@ function addDepartment() {
 		name: "overhead_costs"
 	}
 	]).then(function(answer) {
+		// converts user input to floats
+		var cost = parseFloat(answer.overhead_costs)
+		cost = cost.toFixed(2);
+
 		// checks if user input is valid
-		if (isNaN(answer.overhead_costs) == true) {
+		if (isNaN(answer.overhead_costs) == true || cost <= 0) {
 			console.log("\x1b[31mERROR: Please enter a overhead cost. \n\x1b[37m");
 		} else {
-			// converts user input to floats
-			var cost = parseFloat(answer.overhead_costs)
-			cost = cost.toFixed(2);
-			
 			// query to update the database
 			update = "INSERT INTO departments (department_name, overhead_costs) VALUES ('" + answer.department_name + "', " + cost +")";
 

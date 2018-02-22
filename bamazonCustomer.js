@@ -51,7 +51,7 @@ function buyThis() {
 		if (isNaN(answer.id) == true || id <= 0 || id > resultArray.length) {
 			// displays error message if user enters invalid item id
 			console.log("\x1b[31mERROR: That item does not exist! Please select a valid item. \n\x1b[37m");
-		} else if (isNaN(answer.purchase) == true || quantity == 0) {
+		} else if (isNaN(answer.purchase) == true || quantity <= 0) {
 			// displays error message if user tries to purchase zero units
 			console.log("\x1b[31mERROR: You must order more than one unit to complete a purchase. \n\x1b[37m");
 		} else if (quantity > resultArray[id - 1].stock_quantity) {
