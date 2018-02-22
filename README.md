@@ -1,6 +1,9 @@
 # Bamazon
 Node.js &amp; MySQL homework assignment - storefront application and database.
 
+# Requirements
+You will need to have the following Node.js packages installed prior to running this application: inquirer and mysql.
+
 # Tutorials
 Video tutorials for each of the following versions of Bamazon have been included in this repository under the folder "tutorials."
 
