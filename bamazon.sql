@@ -30,7 +30,7 @@ VALUES
 	("Laptop Backpack with USB Port and Multiple Zipper Pockets", "Accessories", 19.99, 100, 0),
 	("Laptop Sleeve Case  11.6 - 12.3in", "Accessories", 10.26, 100, 0),
 	("Samsung Electronics UN65MU6300 65in 4K Ultra HD Smart LED TV", "Electronics", 879.00, 100, 0),
-    ("Corel PaintShop Pro 2018", "Software", 49.99, 100, 0);
+    	("Corel PaintShop Pro 2018", "Software", 49.99, 100, 0);
     
 -- displays all product information   
 SELECT * FROM products;
@@ -47,8 +47,8 @@ INSERT INTO
 	departments (department_name, overhead_costs)
 VALUES
 	("Accessories", 5000),
-    ("Electronics", 10000),
-    ("Software", 200);
+    	("Electronics", 10000),
+    	("Software", 200);
 
 -- displays all department information
 SELECT * FROM departments;
